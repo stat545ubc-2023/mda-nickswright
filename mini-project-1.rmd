@@ -196,7 +196,7 @@ Make sure that you're using dplyr and ggplot2 rather than base R for this task. 
 
 **Scatterplot**
 I made a scatterplot with year as my explanatory variable on the X-axis and flow as my response variable on the Y-axis. I color coded the points to separate the minimum and maximum flows. I also fitted a trend line to the minimum and maximum flows to examine change over time. I also changed the labels and theme to improve the aesthetics. Maximum flow appears to have declined slightly over time, while minimum flow appears to remain fairly constant, although it would be better to create a plot with just minimum flow data to look more closely.
-```{r}
+```{r Scatterplot}
 ggplot(flow_sample, aes(x=year, y=flow, color=extreme_type)) +
   geom_smooth(method=lm) +
   geom_point() +
@@ -208,7 +208,7 @@ ggplot(flow_sample, aes(x=year, y=flow, color=extreme_type)) +
   
 **Histogram**
 I made a histogram showing the frequency distribution of the flows. I color coded minimum and maximum flows to correspond with the scatterplot for consistency. I also change the theme, labels, legend title, and bin width. This histogram shows that their is far more total variation among maximum flows than minimum flows. However, it only shows absolute variation and not proportional variation, which might be a more useful measurement given that mininimum flows are all much lower. It also shows that the maximum flow distribution is right-skewed.
-```{r}
+```{r Histogram}
 ggplot(flow_sample, aes(x=flow, fill=extreme_type)) + 
   geom_histogram(binwidth = 15) +
   theme_minimal() +
@@ -220,7 +220,7 @@ ggplot(flow_sample, aes(x=flow, fill=extreme_type)) +
   
 **Boxplot**
 I made a boxplot to compare the distribution of maximum flows recorded in each month. I changed the theme and labels and faceted it so that each month would be visible. From these plots we can see that June (month 6) has the highest average maximum flow and widest range. August appears to have a very small number of values.
-```{r}
+```{r Boxplot}
 flow_sample %>%
   filter(extreme_type == "maximum") %>%
   ggplot(aes(x=extreme_type, y=flow)) + 

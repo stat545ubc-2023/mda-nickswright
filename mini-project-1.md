@@ -543,7 +543,7 @@ ggplot(flow_sample, aes(x=year, y=flow, color=extreme_type)) +
 
     ## Warning: Removed 2 rows containing missing values (`geom_point()`).
 
-![](mini-project-1_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](mini-project-1_files/figure-gfm/Scatterplot-1.png)<!-- -->
 
 **Histogram** I made a histogram showing the frequency distribution of
 the flows. I color coded minimum and maximum flows to correspond with
@@ -565,7 +565,7 @@ ggplot(flow_sample, aes(x=flow, fill=extreme_type)) +
 
     ## Warning: Removed 2 rows containing non-finite values (`stat_bin()`).
 
-![](mini-project-1_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](mini-project-1_files/figure-gfm/Histogram-1.png)<!-- -->
 
 **Boxplot** I made a boxplot to compare the distribution of maximum
 flows recorded in each month. I changed the theme and labels and faceted
@@ -584,7 +584,7 @@ flow_sample %>%
   facet_wrap(~month)
 ```
 
-![](mini-project-1_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](mini-project-1_files/figure-gfm/Boxplot-1.png)<!-- -->
 
 **Filter** I filtered the data to look at four different categories. The
 first two are maximum flows greater than 300 before and after 1963 which
