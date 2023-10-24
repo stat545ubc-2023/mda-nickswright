@@ -1,0 +1,899 @@
+Mini Data Analysis Milestone 2
+================
+
+*To complete this milestone, you can either edit [this `.rmd`
+file](https://raw.githubusercontent.com/UBC-STAT/stat545.stat.ubc.ca/master/content/mini-project/mini-project-2.Rmd)
+directly. Fill in the sections that are commented out with
+`<!--- start your work here--->`. When you are done, make sure to knit
+to an `.md` file by changing the output in the YAML header to
+`github_document`, before submitting a tagged release on canvas.*
+
+# Welcome to the rest of your mini data analysis project!
+
+In Milestone 1, you explored your data. and came up with research
+questions. This time, we will finish up our mini data analysis and
+obtain results for your data by:
+
+- Making summary tables and graphs
+- Manipulating special data types in R: factors and/or dates and times.
+- Fitting a model object to your data, and extract a result.
+- Reading and writing data as separate files.
+
+We will also explore more in depth the concept of *tidy data.*
+
+**NOTE**: The main purpose of the mini data analysis is to integrate
+what you learn in class in an analysis. Although each milestone provides
+a framework for you to conduct your analysis, it’s possible that you
+might find the instructions too rigid for your data set. If this is the
+case, you may deviate from the instructions – just make sure you’re
+demonstrating a wide range of tools and techniques taught in this class.
+
+# Instructions
+
+**To complete this milestone**, edit [this very `.Rmd`
+file](https://raw.githubusercontent.com/UBC-STAT/stat545.stat.ubc.ca/master/content/mini-project/mini-project-2.Rmd)
+directly. Fill in the sections that are tagged with
+`<!--- start your work here--->`.
+
+**To submit this milestone**, make sure to knit this `.Rmd` file to an
+`.md` file by changing the YAML output settings from
+`output: html_document` to `output: github_document`. Commit and push
+all of your work to your mini-analysis GitHub repository, and tag a
+release on GitHub. Then, submit a link to your tagged release on canvas.
+
+**Points**: This milestone is worth 50 points: 45 for your analysis, and
+5 for overall reproducibility, cleanliness, and coherence of the Github
+submission.
+
+**Research Questions**: In Milestone 1, you chose two research questions
+to focus on. Wherever realistic, your work in this milestone should
+relate to these research questions whenever we ask for justification
+behind your work. In the case that some tasks in this milestone don’t
+align well with one of your research questions, feel free to discuss
+your results in the context of a different research question.
+
+# Learning Objectives
+
+By the end of this milestone, you should:
+
+- Understand what *tidy* data is, and how to create it using `tidyr`.
+- Generate a reproducible and clear report using R Markdown.
+- Manipulating special data types in R: factors and/or dates and times.
+- Fitting a model object to your data, and extract a result.
+- Reading and writing data as separate files.
+
+# Setup
+
+Begin by loading your data and the tidyverse package below:
+
+``` r
+setwd("/Users/nicholaswright/Desktop/mda-nickswright/Nicholas_Wright_DataProject/mda-nickswright/Mini_Project_2")
+```
+
+``` r
+library(datateachr)
+library(tidyverse)
+library(dplyr)
+library(here)
+```
+
+# Task 1: Process and summarize your data
+
+From milestone 1, you should have an idea of the basic structure of your
+dataset (e.g. number of rows and columns, class types, etc.). Here, we
+will start investigating your data more in-depth using various data
+manipulation functions.
+
+### 1.1 (1 point)
+
+First, write out the 4 research questions you defined in milestone 1
+were. This will guide your work through milestone 2:
+
+<!-------------------------- Start your work below ---------------------------->
+
+Research questions:
+
+1.  Are intensity of minimum and maximum flows correlated each year? Do
+    some years tend to be wet years and some are dry year or if instead
+    minimum and maximum flows are decoupled.
+2.  Are there significant differences between the annual maximum flows
+    of each each decade? 1921-1930, 1931-1940, etc.  
+3.  Have annual minimum flows changed over the time period of this
+    study?
+4.  Are there significant differences between the intensity of annual
+    maximum flows recorded in different months?
+    <!----------------------------------------------------------------------------->
+
+Here, we will investigate your data using various data manipulation and
+graphing functions.
+
+### 1.2 (8 points)
+
+Now, for each of your four research questions, choose one task from
+options 1-4 (summarizing), and one other task from 4-8 (graphing). You
+should have 2 tasks done for each research question (8 total). Make sure
+it makes sense to do them! (e.g. don’t use a numerical variables for a
+task that needs a categorical variable.). Comment on why each task helps
+(or doesn’t!) answer the corresponding research question.
+
+Ensure that the output of each operation is printed!
+
+Also make sure that you’re using dplyr and ggplot2 rather than base R.
+Outside of this project, you may find that you prefer using base R
+functions for certain tasks, and that’s just fine! But part of this
+project is for you to practice the tools we learned in class, which is
+dplyr and ggplot2.
+
+**Summarizing:**
+
+1.  Compute the *range*, *mean*, and *two other summary statistics* of
+    **one numerical variable** across the groups of **one categorical
+    variable** from your data.
+2.  Compute the number of observations for at least one of your
+    categorical variables. Do not use the function `table()`!
+3.  Create a categorical variable with 3 or more groups from an existing
+    numerical variable. You can use this new variable in the other
+    tasks! *An example: age in years into “child, teen, adult, senior”.*
+4.  Compute the proportion and counts in each category of one
+    categorical variable across the groups of another categorical
+    variable from your data. Do not use the function `table()`!
+
+**Graphing:**
+
+6.  Create a graph of your choosing, make one of the axes logarithmic,
+    and format the axes labels so that they are “pretty” or easier to
+    read.
+7.  Make a graph where it makes sense to customize the alpha
+    transparency.
+
+Using variables and/or tables you made in one of the “Summarizing”
+tasks:
+
+8.  Create a graph that has at least two geom layers.
+9.  Create 3 histograms, with each histogram having different sized
+    bins. Pick the “best” one and explain why it is the best.
+
+Make sure it’s clear what research question you are doing each operation
+for!
+
+<!------------------------- Start your work below ----------------------------->
+
+### Are minimum and maximum flows correlated?
+
+``` r
+glimpse(flow_sample)
+```
+
+    ## Rows: 218
+    ## Columns: 7
+    ## $ station_id   <chr> "05BB001", "05BB001", "05BB001", "05BB001", "05BB001", "0…
+    ## $ year         <dbl> 1909, 1910, 1911, 1912, 1913, 1914, 1915, 1916, 1917, 191…
+    ## $ extreme_type <chr> "maximum", "maximum", "maximum", "maximum", "maximum", "m…
+    ## $ month        <dbl> 7, 6, 6, 8, 6, 6, 6, 6, 6, 6, 6, 7, 6, 6, 6, 7, 5, 7, 6, …
+    ## $ day          <dbl> 7, 12, 14, 25, 11, 18, 27, 20, 17, 15, 22, 3, 9, 5, 14, 5…
+    ## $ flow         <dbl> 314, 230, 264, 174, 232, 214, 236, 309, 174, 345, 185, 24…
+    ## $ sym          <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…
+
+``` r
+data_summary <- flow_sample  %>%
+   group_by(extreme_type) %>%
+  summarize(
+    flow_range = range(flow, na.rm=TRUE),
+    flow_mean = mean(flow, na.rm=TRUE),
+    flow_sd = sd(flow, na.rm=TRUE),
+    flow_IQR = IQR(flow, na.rm=TRUE)
+  )
+```
+
+    ## Warning: Returning more (or less) than 1 row per `summarise()` group was deprecated in
+    ## dplyr 1.1.0.
+    ## ℹ Please use `reframe()` instead.
+    ## ℹ When switching from `summarise()` to `reframe()`, remember that `reframe()`
+    ##   always returns an ungrouped data frame and adjust accordingly.
+    ## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+    ## generated.
+
+    ## `summarise()` has grouped output by 'extreme_type'. You can override using the
+    ## `.groups` argument.
+
+``` r
+data_summary
+```
+
+    ## # A tibble: 4 × 5
+    ## # Groups:   extreme_type [2]
+    ##   extreme_type flow_range flow_mean flow_sd flow_IQR
+    ##   <chr>             <dbl>     <dbl>   <dbl>    <dbl>
+    ## 1 maximum          107       212.    61.7      80   
+    ## 2 maximum          466       212.    61.7      80   
+    ## 3 minimum            3.62      6.27   0.965     1.26
+    ## 4 minimum            8.44      6.27   0.965     1.26
+
+Before analyzing whether minimum and maximum flows are correlated I
+wanted to examine some summary statistics for both of them. I found that
+the mean, range, interquartile range, and standard deviation are much
+higher for maximum flows than minimum flows, which will make them
+challenging to graphically compare.
+
+``` r
+bin_edges <- c(0, 6.27, 9, 212, 467)
+bin_labels <- c("Low Minimum", "High Minimum", "Low Maximum", "High Maximum")
+flow_sample_breaks <- flow_sample %>%
+  mutate(Flow_Intensity = cut(flow, breaks = bin_edges, labels = bin_labels, include.lowest = TRUE))
+
+category_colors <- c("Low Minimum" = "red", "High Minimum" = "blue", "Low Maximum" = "red", "High Maximum" = "blue")
+flow_sample_correlation <- flow_sample_breaks %>% filter(year>1998) %>%
+ggplot(aes(x=year, y=flow, col=Flow_Intensity)) +
+  geom_point() +
+  theme_minimal() +
+  xlab("Year") +
+  ylab("Flow") +
+  scale_color_manual(values = category_colors)
+  scale_y_log10()
+```
+
+    ## <ScaleContinuousPosition>
+    ##  Range:  
+    ##  Limits:    0 --    1
+
+``` r
+flow_sample_correlation
+```
+
+![](mini-project-2_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+
+I made a graph of the last 20 years to visually assess whether intensity
+of maximum and minimum flows appears to be correlated. I made below
+average minimum and maximum flows red and above average minimum and
+maximum flows blue. I edited the labels and I log transformed the y-axis
+so it’s easier to compare maximum and minimum value. Based on this graph
+I do not see a correlation between intensity of maximum and minimum
+flows during the last 20 years.
+
+### Are there differences between the maximum flows of each decade?
+
+``` r
+bin_edges <- c(1900, 1919, 1929, 1939, 1949, 1959, 1969, 1979, 1989, 1999, 2009, 2019)
+bin_labels <- c("1910s", "1920s", "1930s", "1940s", "1950s", "1960s", "1970s", "1980s", "1990s", "2000s", "2010s")
+flow_sample_decades <- flow_sample %>%
+  mutate(Decades = cut(year, breaks = bin_edges, labels = bin_labels, include.lowest = TRUE))
+
+flow_sample_decades
+```
+
+    ## # A tibble: 218 × 8
+    ##    station_id  year extreme_type month   day  flow sym   Decades
+    ##    <chr>      <dbl> <chr>        <dbl> <dbl> <dbl> <chr> <fct>  
+    ##  1 05BB001     1909 maximum          7     7   314 <NA>  1910s  
+    ##  2 05BB001     1910 maximum          6    12   230 <NA>  1910s  
+    ##  3 05BB001     1911 maximum          6    14   264 <NA>  1910s  
+    ##  4 05BB001     1912 maximum          8    25   174 <NA>  1910s  
+    ##  5 05BB001     1913 maximum          6    11   232 <NA>  1910s  
+    ##  6 05BB001     1914 maximum          6    18   214 <NA>  1910s  
+    ##  7 05BB001     1915 maximum          6    27   236 <NA>  1910s  
+    ##  8 05BB001     1916 maximum          6    20   309 <NA>  1910s  
+    ##  9 05BB001     1917 maximum          6    17   174 <NA>  1910s  
+    ## 10 05BB001     1918 maximum          6    15   345 <NA>  1910s  
+    ## # ℹ 208 more rows
+
+I mutated the numerical years variable into an ordinal categorical
+variable of decades. Each decade starts with a year ending in 0 and ends
+with a year ending in 9 and has 10 years within. The exceptions are the
+first decade (to which I added 1909) and the last decade (which ends
+with 2018).
+
+``` r
+flow_sample_decades %>% filter(extreme_type == "maximum") %>%
+ggplot(aes(x=Decades, y=flow)) +
+  geom_boxplot() +
+  xlab("Decade") +
+  ylab("Flow (log m^3/s)") +
+  theme_minimal() +
+  scale_y_log10()
+```
+
+![](mini-project-2_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+I made a box plot to compare the means and range of flows from each
+decade. I changed the labels and theme to improve the legibility. I also
+transformed the y-axis by log 10 to improve visual comparison between
+the decades.
+
+### Have minimum flows changed over time?
+
+``` r
+bin_edges <- c(1909, 1936, 1983, 2018)
+bin_labels <- c("Period 1", "Period 2", "Period 3")
+flow_sample_periods <- flow_sample %>% filter(extreme_type == "minimum") %>%
+  mutate(Periods = cut(year, breaks = bin_edges, labels = bin_labels, include.lowest = TRUE))
+
+flow_sample_periods
+```
+
+    ## # A tibble: 109 × 8
+    ##    station_id  year extreme_type month   day  flow sym   Periods 
+    ##    <chr>      <dbl> <chr>        <dbl> <dbl> <dbl> <chr> <fct>   
+    ##  1 05BB001     1909 minimum         NA    NA NA    <NA>  Period 1
+    ##  2 05BB001     1910 minimum         NA    NA NA    <NA>  Period 1
+    ##  3 05BB001     1911 minimum          2    27  5.75 <NA>  Period 1
+    ##  4 05BB001     1912 minimum          3    14  5.8  <NA>  Period 1
+    ##  5 05BB001     1913 minimum          3    18  6.12 B     Period 1
+    ##  6 05BB001     1914 minimum         11    17  7.16 <NA>  Period 1
+    ##  7 05BB001     1915 minimum          1    27  6.94 <NA>  Period 1
+    ##  8 05BB001     1916 minimum          3     2  6.97 B     Period 1
+    ##  9 05BB001     1917 minimum          2    23  6.06 B     Period 1
+    ## 10 05BB001     1918 minimum          2    20  6.03 B     Period 1
+    ## # ℹ 99 more rows
+
+I changed the numerical “years” variable into an ordinal categorical
+“periods’ variable that divided the time period of this dataset into 3.
+
+``` r
+flow_sample_minimum <- flow_sample_periods %>% filter(extreme_type == "minimum")
+ggplot(flow_sample_minimum, aes(x=year, y=flow, col = Periods, na.rm=TRUE)) +
+  geom_smooth(method=lm, colour="grey") +
+  geom_point() +
+  theme_minimal() +
+  xlab("Year") +
+  ylab("Flow")
+```
+
+    ## `geom_smooth()` using formula = 'y ~ x'
+
+    ## Warning: Removed 2 rows containing non-finite values (`stat_smooth()`).
+
+    ## Warning: Removed 2 rows containing missing values (`geom_point()`).
+
+![](mini-project-2_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+I used a scatterplot and added a trend line to be able to visualize the
+change of minimum flows across the study period. I also colored the
+points by time period to help look for differences between the periods.
+This graph appears to disprove my hypothesis that minimum flows would
+decrease over the course of the study period due to climate change
+induced drought.
+
+### Are there differences between intensity of maximum flows recorded each month?
+
+``` r
+flow_sample %>% filter(extreme_type == "maximum") %>% count(month)
+```
+
+    ## # A tibble: 4 × 2
+    ##   month     n
+    ##   <dbl> <int>
+    ## 1     5    16
+    ## 2     6    79
+    ## 3     7    13
+    ## 4     8     1
+
+This count shows that annual maximum flows were recorded in May, June,
+July, and August. By far the most maximum flows were recorded in June.
+Similar numbers were recorded in May and July. I am going to exclude
+August from my next graphs because there is only one observation.
+
+``` r
+flow_sample1 <- flow_sample %>% filter(month == "5" | month=="6" | month=="7")
+  ggplot(flow_sample1, aes(x=flow, fill=extreme_type)) + 
+    geom_histogram(binwidth = 3) +
+    theme_minimal() + 
+    facet_wrap(~month, ncol=1) #To put all 3 graphs in the same column
+```
+
+![](mini-project-2_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+Using a small bin width I can see that June has the widest range of
+values. It is challenging to compare between months with this bin size.
+I can see one extremely high flow in June.
+
+``` r
+  flow_sample1 <- flow_sample %>% filter(month == "5" | month=="6" | month=="7")
+  ggplot(flow_sample1, aes(x=flow, fill=extreme_type)) + 
+    geom_histogram(binwidth = 20) +
+    theme_minimal() +
+    facet_wrap(~month, ncol=1)
+```
+
+![](mini-project-2_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+Using a moderately wide bin width I can see that the highest frequency
+of observations in June is around a flow of 225. I can also tell that
+May and July appear to have a similar average maximum flow but July has
+a wider range. I can also appreciate how many more data points are from
+July than the other months. This is my favorite bin width for
+representing this data set due to the blaance of clarity and granularity
+of data depicted.
+
+``` r
+    flow_sample1 <- flow_sample %>% filter(month == "5" | month=="6" | month=="7")
+  ggplot(flow_sample1, aes(x=flow, fill=extreme_type)) + 
+    geom_histogram(binwidth = 50) +
+    theme_minimal() +
+    facet_wrap(~month, ncol=1)
+```
+
+![](mini-project-2_files/figure-gfm/unnamed-chunk-12-1.png)<!-- --> I
+find using a very wide bin width preferable to very small, but still not
+ideal. The advantage is that it is easy to quickly look at and see
+trends. However, some level of detail is lost–for example I can’t tell
+precisely what flow was recorded most frequently in June.
+
+<!----------------------------------------------------------------------------->
+
+### 1.3 (2 points)
+
+Based on the operations that you’ve completed, how much closer are you
+to answering your research questions? Think about what aspects of your
+research questions remain unclear. Can your research questions be
+refined, now that you’ve investigated your data a bit more? Which
+research questions are yielding interesting results?
+
+<!------------------------- Write your answer here ---------------------------->
+
+I think all of these methods advanced my understanding of the questions
+I posed. Here are my main takeaways from each analysis:
+
+1.  Intensity of minimum and maximum flows do not appear to be
+    correlated during the most recent 20 years. However, I would need to
+    run a statistical model to really test that for the duration of the
+    study period.
+
+2.  There are clearly differences in mean, IQR, and range between the
+    maximimum flows of each decade, although these differences don’t
+    appear to be huge. I would need to run a model to trust whether any
+    of the years are significantly different.
+
+3.  Minimum flow has increased across this study. It would be
+    interesting to test whether there are any significant differences
+    between the 3 time periods of the study.
+
+4.  There are clear differences between the maximum flows of May, June,
+    and July. June in particular has far more data points than the other
+    two months. I would be interested in in testing whether the means of
+    the three months are significantly different.
+
+<!----------------------------------------------------------------------------->
+
+# Task 2: Tidy your data
+
+In this task, we will do several exercises to reshape our data. The goal
+here is to understand how to do this reshaping with the `tidyr` package.
+
+A reminder of the definition of *tidy* data:
+
+- Each row is an **observation**
+- Each column is a **variable**
+- Each cell is a **value**
+
+### 2.1 (2 points)
+
+Based on the definition above, can you identify if your data is tidy or
+untidy? Go through all your columns, or if you have \>8 variables, just
+pick 8, and explain whether the data is untidy or tidy.
+
+<!--------------------------- Start your work below --------------------------->
+
+The flow sample data is tidy. Each row is an observation, each column is
+a variable, and each cell is a value. The columns station_id, year,
+extreme_type, month, date, flow, and sym are all variables.
+
+<!----------------------------------------------------------------------------->
+
+### 2.2 (4 points)
+
+Now, if your data is tidy, untidy it! Then, tidy it back to it’s
+original state.
+
+If your data is untidy, then tidy it! Then, untidy it back to it’s
+original state.
+
+Be sure to explain your reasoning for this task. Show us the “before”
+and “after”.
+
+<!--------------------------- Start your work below --------------------------->
+
+``` r
+flow_sample_wider <- flow_sample %>% 
+  select(year, extreme_type, flow) %>%
+  pivot_wider(names_from = extreme_type,
+              values_from = flow) 
+
+flow_sample_wider
+```
+
+    ## # A tibble: 109 × 3
+    ##     year maximum minimum
+    ##    <dbl>   <dbl>   <dbl>
+    ##  1  1909     314   NA   
+    ##  2  1910     230   NA   
+    ##  3  1911     264    5.75
+    ##  4  1912     174    5.8 
+    ##  5  1913     232    6.12
+    ##  6  1914     214    7.16
+    ##  7  1915     236    6.94
+    ##  8  1916     309    6.97
+    ##  9  1917     174    6.06
+    ## 10  1918     345    6.03
+    ## # ℹ 99 more rows
+
+``` r
+# I first removed unnecessary columns and then did a univariate pivot to widen the data so I could compare the maximum and minimum flows each year. This data is no longer tidy because each row contains 2 observations, which are the max and min flows from that year. 
+
+
+flow_sample_longer <- flow_sample_wider %>% pivot_longer(cols = c(-year), 
+               names_to  = "extreme_type", 
+               values_to = "flow")
+
+flow_sample_longer
+```
+
+    ## # A tibble: 218 × 3
+    ##     year extreme_type   flow
+    ##    <dbl> <chr>         <dbl>
+    ##  1  1909 maximum      314   
+    ##  2  1909 minimum       NA   
+    ##  3  1910 maximum      230   
+    ##  4  1910 minimum       NA   
+    ##  5  1911 maximum      264   
+    ##  6  1911 minimum        5.75
+    ##  7  1912 maximum      174   
+    ##  8  1912 minimum        5.8 
+    ##  9  1913 maximum      232   
+    ## 10  1913 minimum        6.12
+    ## # ℹ 208 more rows
+
+``` r
+# I then did another univariate pivot using the pivot_longer function to lengthen the data and make it tidy again. 
+```
+
+<!----------------------------------------------------------------------------->
+
+### 2.3 (4 points)
+
+Now, you should be more familiar with your data, and also have made
+progress in answering your research questions. Based on your interest,
+and your analyses, pick 2 of the 4 research questions to continue your
+analysis in the remaining tasks:
+
+<!-------------------------- Start your work below ---------------------------->
+
+#### I am most interested in pursuing these questions:
+
+1.  Are intensity of minimum and maximum flows correlated each year? Do
+    some years tend to be wet years and some are dry year or if instead
+    minimum and maximum flows are decoupled.
+
+2.  Are there significant differences between the annual maximum flows
+    of each each decade? 1921-1930, 1931-1940, etc.
+
+<!----------------------------------------------------------------------------->
+
+I want to understand whether intensity of annual maximum and minimum
+flows are correlated for several reasons. First, I felt that graphing it
+could not really help me get a sense of the answer and I think running a
+statistical model would be essential. Second, I think that answering
+this question would provide insights into the environmental dynamics of
+this system. Specifically do we tend to see generally wet year and dry
+years? Or are minimum and maximum flows decoupled, which might be
+because minimum flows are determined by rainfall and maximum flows are
+determined by snow melt.
+
+I want to come test whether there are differences between annual maximum
+flows on the decade time scale. I have already divided the dates into
+decades so I think that it would make sense to then compare these
+decades against each other. It will be interesting to analyze the amount
+of variation between decades, since some ecosystems experience high
+interannual variability in precipitation and some are quite stable. I
+think this question important for assessing whether we should prepare
+for long time periods of low or high flow that could lead to water
+shortages or flooding, respectively.
+
+Now, try to choose a version of your data that you think will be
+appropriate to answer these 2 questions. Use between 4 and 8 functions
+that we’ve covered so far (i.e. by filtering, cleaning, tidy’ing,
+dropping irrelevant columns, etc).
+
+(If it makes more sense, then you can make/pick two versions of your
+data, one for each research question.)
+<!--------------------------- Start your work below --------------------------->
+
+### Correlation Analysis Data Cleaning
+
+``` r
+flow_sample_correlation_analysis <- flow_sample %>%  select(year, extreme_type, flow) %>%
+ filter(year > 1910)
+
+flow_sample_correlation_analysis
+```
+
+    ## # A tibble: 214 × 3
+    ##     year extreme_type  flow
+    ##    <dbl> <chr>        <dbl>
+    ##  1  1911 maximum        264
+    ##  2  1912 maximum        174
+    ##  3  1913 maximum        232
+    ##  4  1914 maximum        214
+    ##  5  1915 maximum        236
+    ##  6  1916 maximum        309
+    ##  7  1917 maximum        174
+    ##  8  1918 maximum        345
+    ##  9  1919 maximum        185
+    ## 10  1920 maximum        248
+    ## # ℹ 204 more rows
+
+I used a select function to get rid of unnecessary columns and then the
+filter funciton to remove the first two years of the study which had NA
+values for minimum flow.
+
+### Decade Analysis Data Cleaning
+
+``` r
+bin_edges <- c(1900, 1919, 1929, 1939, 1949, 1959, 1969, 1979, 1989, 1999, 2009, 2019)
+bin_labels <- c("1910s", "1920s", "1930s", "1940s", "1950s", "1960s", "1970s", "1980s", "1990s", "2000s", "2010s")
+flow_sample_decades <- flow_sample %>%
+  mutate(Decades = cut(year, breaks = bin_edges, labels = bin_labels, include.lowest = TRUE))
+
+flow_sample_decades
+```
+
+    ## # A tibble: 218 × 8
+    ##    station_id  year extreme_type month   day  flow sym   Decades
+    ##    <chr>      <dbl> <chr>        <dbl> <dbl> <dbl> <chr> <fct>  
+    ##  1 05BB001     1909 maximum          7     7   314 <NA>  1910s  
+    ##  2 05BB001     1910 maximum          6    12   230 <NA>  1910s  
+    ##  3 05BB001     1911 maximum          6    14   264 <NA>  1910s  
+    ##  4 05BB001     1912 maximum          8    25   174 <NA>  1910s  
+    ##  5 05BB001     1913 maximum          6    11   232 <NA>  1910s  
+    ##  6 05BB001     1914 maximum          6    18   214 <NA>  1910s  
+    ##  7 05BB001     1915 maximum          6    27   236 <NA>  1910s  
+    ##  8 05BB001     1916 maximum          6    20   309 <NA>  1910s  
+    ##  9 05BB001     1917 maximum          6    17   174 <NA>  1910s  
+    ## 10 05BB001     1918 maximum          6    15   345 <NA>  1910s  
+    ## # ℹ 208 more rows
+
+``` r
+flow_sample_decades_analysis <- flow_sample_decades %>% 
+  select(year, extreme_type, flow, Decades) %>% 
+  filter(extreme_type == "maximum")
+  
+flow_sample_decades_analysis
+```
+
+    ## # A tibble: 109 × 4
+    ##     year extreme_type  flow Decades
+    ##    <dbl> <chr>        <dbl> <fct>  
+    ##  1  1909 maximum        314 1910s  
+    ##  2  1910 maximum        230 1910s  
+    ##  3  1911 maximum        264 1910s  
+    ##  4  1912 maximum        174 1910s  
+    ##  5  1913 maximum        232 1910s  
+    ##  6  1914 maximum        214 1910s  
+    ##  7  1915 maximum        236 1910s  
+    ##  8  1916 maximum        309 1910s  
+    ##  9  1917 maximum        174 1910s  
+    ## 10  1918 maximum        345 1910s  
+    ## # ℹ 99 more rows
+
+I divided the dates into decades using a mutate function, used a
+selection function to get rid of unwanted columns, and filtered the the
+extreme type to only keep minimum flows.
+
+<!----------------------------------------------------------------------------->
+<!--------------------------- Start your work below --------------------------->
+
+# Task 3: Modelling
+
+## 3.0 (no points)
+
+<!-------------------------- Start your work below ---------------------------->
+
+**Research Question**: Are there significant differences in intensity of
+maximum flows between decades?
+
+**Variable of interest**: Explanatory variable-Decade, Response
+variable-Flow
+<!----------------------------------------------------------------------------->
+
+## 3.1 (3 points)
+
+Fit a model or run a hypothesis test that provides insight on this
+variable with respect to the research question. Store the model object
+as a variable, and print its output to screen. We’ll omit having to
+justify your choice, because we don’t expect you to know about model
+specifics in STAT 545.
+
+- **Note**: It’s OK if you don’t know how these models/tests work. Here
+  are some examples of things you can do here, but the sky’s the limit.
+
+  - You could fit a model that makes predictions on Y using another
+    variable, by using the `lm()` function.
+  - You could test whether the mean of Y equals 0 using `t.test()`, or
+    maybe the mean across two groups are different using `t.test()`, or
+    maybe the mean across multiple groups are different using `anova()`
+    (you may have to pivot your data for the latter two).
+  - You could use `lm()` to test for significance of regression
+    coefficients.
+
+<!-------------------------- Start your work below ---------------------------->
+
+``` r
+anova_result <- aov(flow ~ Decades, data = flow_sample_decades_analysis)
+anova_result
+```
+
+    ## Call:
+    ##    aov(formula = flow ~ Decades, data = flow_sample_decades_analysis)
+    ## 
+    ## Terms:
+    ##                  Decades Residuals
+    ## Sum of Squares   45086.9  365838.5
+    ## Deg. of Freedom       10        98
+    ## 
+    ## Residual standard error: 61.09866
+    ## Estimated effects may be unbalanced
+
+<!----------------------------------------------------------------------------->
+
+## 3.2 (3 points)
+
+Produce something relevant from your fitted model: either predictions on
+Y, or a single value like a regression coefficient or a p-value.
+
+- Be sure to indicate in writing what you chose to produce.
+- Your code should either output a tibble (in which case you should
+  indicate the column that contains the thing you’re looking for), or
+  the thing you’re looking for itself.
+- Obtain your results using the `broom` package if possible. If your
+  model is not compatible with the broom function you’re needing, then
+  you can obtain your results by some other means, but first indicate
+  which broom function is not compatible.
+
+<!-------------------------- Start your work below ---------------------------->
+
+``` r
+decade_tidy <- broom::tidy(anova_result)
+print(decade_tidy)
+```
+
+    ## # A tibble: 2 × 6
+    ##   term         df   sumsq meansq statistic p.value
+    ##   <chr>     <dbl>   <dbl>  <dbl>     <dbl>   <dbl>
+    ## 1 Decades      10  45087.  4509.      1.21   0.296
+    ## 2 Residuals    98 365839.  3733.     NA     NA
+
+``` r
+summary(anova_result)
+```
+
+    ##             Df Sum Sq Mean Sq F value Pr(>F)
+    ## Decades     10  45087    4509   1.208  0.296
+    ## Residuals   98 365839    3733
+
+I used an ANOVA to compare the flow means between decades. Using the
+broom:tidy function I produced a tibble with results. The p-value is
+0.295, indicating the there are not significant differences between the
+means of the different decades. I also ran a summary function and found
+that the F-value is 1.208. With this information I can not reject the
+null hypothesis that there are no significant differences in flow
+between decades.
+
+<!----------------------------------------------------------------------------->
+
+# Task 4: Reading and writing data
+
+Get set up for this exercise by making a folder called `output` in the
+top level of your project folder / repository. You’ll be saving things
+there.
+
+## 4.1 (3 points)
+
+Take a summary table that you made from Task 1, and write it as a csv
+file in your `output` folder. Use the `here::here()` function.
+
+- **Robustness criteria**: You should be able to move your Mini Project
+  repository / project folder to some other location on your computer,
+  or move this very Rmd file to another location within your project
+  repository / folder, and your code should still work.
+- **Reproducibility criteria**: You should be able to delete the csv
+  file, and remake it simply by knitting this Rmd file.
+
+<!-------------------------- Start your work below ---------------------------->
+
+``` r
+Summary_Table <- data_summary
+
+write.csv(Summary_Table, file = here::here("output/Summary_Table.csv"))
+```
+
+<!----------------------------------------------------------------------------->
+
+## 4.2 (3 points)
+
+Write your model object from Task 3 to an R binary file (an RDS), and
+load it again. Be sure to save the binary file in your `output` folder.
+Use the functions `saveRDS()` and `readRDS()`.
+
+- The same robustness and reproducibility criteria as in 4.1 apply here.
+
+<!-------------------------- Start your work below ---------------------------->
+
+``` r
+decades_model <- here::here("output", "decades_anova.rds")
+saveRDS(anova_result, file = decades_model)
+
+cat("Model object saved to:", decades_model, "\n")
+```
+
+    ## Model object saved to: /Users/nicholaswright/Desktop/mda-nickswright/Nicholas_Wright_DataProject/mda-nickswright/output/decades_anova.rds
+
+``` r
+load_saved_model <- readRDS(decades_model)
+
+print(load_saved_model)
+```
+
+    ## Call:
+    ##    aov(formula = flow ~ Decades, data = flow_sample_decades_analysis)
+    ## 
+    ## Terms:
+    ##                  Decades Residuals
+    ## Sum of Squares   45086.9  365838.5
+    ## Deg. of Freedom       10        98
+    ## 
+    ## Residual standard error: 61.09866
+    ## Estimated effects may be unbalanced
+
+<!----------------------------------------------------------------------------->
+
+# Overall Reproducibility/Cleanliness/Coherence Checklist
+
+Here are the criteria we’re looking for.
+
+## Coherence (0.5 points)
+
+The document should read sensibly from top to bottom, with no major
+continuity errors.
+
+The README file should still satisfy the criteria from the last
+milestone, i.e. it has been updated to match the changes to the
+repository made in this milestone.
+
+## File and folder structure (1 points)
+
+You should have at least three folders in the top level of your
+repository: one for each milestone, and one output folder. If there are
+any other folders, these are explained in the main README.
+
+Each milestone document is contained in its respective folder, and
+nowhere else.
+
+Every level-1 folder (that is, the ones stored in the top level, like
+“Milestone1” and “output”) has a `README` file, explaining in a sentence
+or two what is in the folder, in plain language (it’s enough to say
+something like “This folder contains the source for Milestone 1”).
+
+## Output (1 point)
+
+All output is recent and relevant:
+
+- All Rmd files have been `knit`ted to their output md files.
+- All knitted md files are viewable without errors on Github. Examples
+  of errors: Missing plots, “Sorry about that, but we can’t show files
+  that are this big right now” messages, error messages from broken R
+  code
+- All of these output files are up-to-date – that is, they haven’t
+  fallen behind after the source (Rmd) files have been updated.
+- There should be no relic output files. For example, if you were
+  knitting an Rmd to html, but then changed the output to be only a
+  markdown file, then the html file is a relic and should be deleted.
+
+Our recommendation: delete all output files, and re-knit each
+milestone’s Rmd file, so that everything is up to date and relevant.
+
+## Tagged release (0.5 point)
+
+You’ve tagged a release for Milestone 2.
+
+### Attribution
+
+Thanks to Victor Yuan for mostly putting this together.
