@@ -6,3 +6,10 @@ The mini-project-1.md file contains my process of looking through several datase
 
 ### Milestone 2
 The mini-project-2.md file contains my process of attempting to answer my 4 research questions through data cleaning and graphing for visual analysis. I then narrowed down by interests to 2 research questions and tidy'd the data needed for those questions. Next, I ran an ANOVA model to answer one of my research questions and then used the broom package to look at my results. Finally, I used the here:here function to save my data.
+
+## Files
+1. Mini_Project_1 - Files from milestone 1
+2. Mini_Project_2 - Files from milestone 2
+3. Output - Summary table and model results
+4. .gitignore file
+5. Rproj file
