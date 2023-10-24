@@ -1,6 +1,6 @@
 ---
 title: "Mini Data Analysis Milestone 2"
-output: html_document
+output: github_document
 ---
 
 *To complete this milestone, you can either edit [this `.rmd` file](https://raw.githubusercontent.com/UBC-STAT/stat545.stat.ubc.ca/master/content/mini-project/mini-project-2.Rmd) directly. Fill in the sections that are commented out with `<!--- start your work here--->`. When you are done, make sure to knit to an `.md` file by changing the output in the YAML header to `github_document`, before submitting a tagged release on canvas.*
@@ -17,6 +17,7 @@ In Milestone 1, you explored your data. and came up with research questions. Thi
 We will also explore more in depth the concept of *tidy data.* 
 
 **NOTE**: The main purpose of the mini data analysis is to integrate what you learn in class in an analysis. Although each milestone provides a framework for you to conduct your analysis, it's possible that you might find the instructions too rigid for your data set. If this is the case, you may deviate from the instructions -- just make sure you're demonstrating a wide range of tools and techniques taught in this class.
+
 
 # Instructions
 
@@ -42,8 +43,13 @@ By the end of this milestone, you should:
 
 Begin by loading your data and the tidyverse package below:
 
+```{r}
+setwd("/Users/nicholaswright/Desktop/mda-nickswright/Nicholas_Wright_DataProject/mda-nickswright/Mini_Project_2")
+
+```
+
 ```{r, message = FALSE}
-library(datateachr) # <- might contain the data you picked!
+library(datateachr)
 library(tidyverse)
 library(dplyr)
 library(here)
@@ -137,7 +143,7 @@ flow_sample_correlation
 
 ```
 
-I made a graph of the last 20 years to visually assess whether intensity of maximum and minimum flows appears to be correlated. I made below average minimum and maximum flows red and above average minimum and maximum flows blue. I edited the labels and I log transformed the y-axis so it's easier to comapre maximum and minimum value. Based on this graph I do not see a correlation between intensity of maximum and minimum flwos during the last 20 years.
+I made a graph of the last 20 years to visually assess whether intensity of maximum and minimum flows appears to be correlated. I made below average minimum and maximum flows red and above average minimum and maximum flows blue. I edited the labels and I log transformed the y-axis so it's easier to compare maximum and minimum value. Based on this graph I do not see a correlation between intensity of maximum and minimum flows during the last 20 years.
 
 ### Are there differences between the maximum flows of each decade?
 
@@ -188,7 +194,7 @@ ggplot(flow_sample_minimum, aes(x=year, y=flow, col = Periods, na.rm=TRUE)) +
   ylab("Flow")
 ```
 
-I used a scatterplot and added a trend line to be able to visualize the change of minimum flows across the study period. I also colored the points by time period to help look for differences between the periods. This graph appears to disprove my hypothesis that minimum flows would decrease over the course of the study period due to cliamte change induced drought.
+I used a scatterplot and added a trend line to be able to visualize the change of minimum flows across the study period. I also colored the points by time period to help look for differences between the periods. This graph appears to disprove my hypothesis that minimum flows would decrease over the course of the study period due to climate change induced drought.
 
 ### Are there differences between intensity of maximum flows recorded each month?
 
@@ -239,7 +245,7 @@ Based on the operations that you've completed, how much closer are you to answer
 
 <!------------------------- Write your answer here ---------------------------->
 
-#### I think all of these methods advanced my understanding of the questions I posed. Here are my main takeaways from each analysis:
+I think all of these methods advanced my understanding of the questions I posed. Here are my main takeaways from each analysis:
 
 1. Intensity of minimum and maximum flows do not appear to be correlated during the most recent 20 years. However, I would need to run a statistical model to really test that for the duration of the study period.
 
@@ -247,9 +253,7 @@ Based on the operations that you've completed, how much closer are you to answer
 
 3. Minimum flow has increased across this study. It would be interesting to test whether there are any significant differences between the 3 time periods of the study.
 
-4. There are clear differences between the maximum flows of May, June, and July. June in particular has far more data points than the other two months. I would be interested in in testing whether the means of the three motnhs are significantly different.
-
-
+4. There are clear differences between the maximum flows of May, June, and July. June in particular has far more data points than the other two months. I would be interested in in testing whether the means of the three months are significantly different.
 
 <!----------------------------------------------------------------------------->
 
@@ -269,7 +273,7 @@ Based on the definition above, can you identify if your data is tidy or untidy? 
 
 <!--------------------------- Start your work below --------------------------->
 
-All of my flow sample columns are tidy. Each row is an observation, each column is a variable, and each cell is a value. The columns station_id, year, extreme_type, month, date, flow, and sym are all variables. 
+The flow sample data is tidy. Each row is an observation, each column is a variable, and each cell is a value. The columns station_id, year, extreme_type, month, date, flow, and sym are all variables. 
 
 
 <!----------------------------------------------------------------------------->
@@ -284,7 +288,6 @@ Be sure to explain your reasoning for this task. Show us the "before" and "after
 
 <!--------------------------- Start your work below --------------------------->
 ```{r}
-#filter(!is.na(flow)) 
 
 flow_sample_wider <- flow_sample %>% 
   select(year, extreme_type, flow) %>%
@@ -293,7 +296,7 @@ flow_sample_wider <- flow_sample %>%
 
 flow_sample_wider
 
-# I first removed unnecessary columns and then did a univariate pivot to widen the data so I could compare the maximum and minimum flows each year. This data is no longer tidy because each row contains 2 observations, the max and min flows from that year. 
+# I first removed unnecessary columns and then did a univariate pivot to widen the data so I could compare the maximum and minimum flows each year. This data is no longer tidy because each row contains 2 observations, which are the max and min flows from that year. 
 
 
 flow_sample_longer <- flow_sample_wider %>% pivot_longer(cols = c(-year), 
@@ -322,10 +325,11 @@ Now, you should be more familiar with your data, and also have made progress in 
 
 I want to understand whether intensity of annual maximum and minimum flows are correlated for several reasons. First, I felt that graphing it could not really help me get a sense of the answer and I think running a statistical model would be essential. Second, I think that answering this question would provide insights into the environmental dynamics of this system. Specifically do we tend to see generally wet year and dry years? Or are minimum and maximum flows decoupled, which might be because minimum flows are determined by rainfall and maximum flows are determined by snow melt. 
 
-I want to come test whether there are differences between annual maximum flows on the decade time scale. I have already divided the dates into decades so I think that it would make sense to then compare these decades against each other. It will be interesting to analyze the amount of variation between decades, since some esystems experience high interannual variability in percipitations and some are quite stable. I think this question important for assessing whether we should prepare for long time periods of low or high flow that could lead to water shortages or flooding, respectively. 
+I want to come test whether there are differences between annual maximum flows on the decade time scale. I have already divided the dates into decades so I think that it would make sense to then compare these decades against each other. It will be interesting to analyze the amount of variation between decades, since some ecosystems experience high interannual variability in precipitation and some are quite stable. I think this question important for assessing whether we should prepare for long time periods of low or high flow that could lead to water shortages or flooding, respectively. 
 
 
-Now, try to choose a version of your data that you think will be appropriate to answer these 2 questions. Use between 4 and 8 functions that we've covered so far (i.e. by filtering, cleaning, tidy'ing, dropping irrelevant columns, etc.).
+
+Now, try to choose a version of your data that you think will be appropriate to answer these 2 questions. Use between 4 and 8 functions that we've covered so far (i.e. by filtering, cleaning, tidy'ing, dropping irrelevant columns, etc).
 
 (If it makes more sense, then you can make/pick two versions of your data, one for each research question.) 
 <!--------------------------- Start your work below --------------------------->
@@ -455,7 +459,6 @@ Write your model object from Task 3 to an R binary file (an RDS), and load it ag
 <!-------------------------- Start your work below ---------------------------->
 
 ```{r}
-
 decades_model <- here::here("output", "decades_anova.rds")
 saveRDS(anova_result, file = decades_model)
 
@@ -464,7 +467,6 @@ cat("Model object saved to:", decades_model, "\n")
 load_saved_model <- readRDS(decades_model)
 
 print(load_saved_model)
-
 ```
 <!----------------------------------------------------------------------------->
 
